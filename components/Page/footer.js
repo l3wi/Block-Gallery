@@ -2,26 +2,26 @@ import { Box, Flex, HStack, Link, Text } from "@chakra-ui/layout"
 import React from "react"
 
 const links = [
-  {
-    label: "Code",
-    href: "#",
-    isExternal: true
-  },
-  {
-    label: "Discord",
-    href: "#",
-    isExternal: true
-  },
-  {
-    label: "FAQ",
-    href: "#",
-    isExternal: true
-  },
-  {
-    label: "Governance",
-    href: "#",
-    isExternal: true
-  }
+  // {
+  //   label: "Code",
+  //   href: "#",
+  //   isExternal: true
+  // },
+  // {
+  //   label: "Discord",
+  //   href: "#",
+  //   isExternal: true
+  // },
+  // {
+  //   label: "FAQ",
+  //   href: "#",
+  //   isExternal: true
+  // },
+  // {
+  //   label: "Governance",
+  //   href: "#",
+  //   isExternal: true
+  // }
 ]
 
 const Footer = () => {
@@ -36,10 +36,10 @@ const Footer = () => {
       >
         <Box textAlign={["center", "center", "initial"]}>
           <Text fontWeight="bold" fontSize="md">
-            ab.exchange
+            Blocks Gallery
           </Text>
           <Text fontSize="sm" color="gray.500">
-            ArtBlocks exhcange powered by 0x
+            An independent ArtBlocks gallery
           </Text>
         </Box>
         <Box>

@@ -1,8 +1,9 @@
-import { ethers } from 'ethers'
+import { ethers } from "ethers"
+import { commas } from "./helpers"
 // Set provider for pre-render operations where no wallet is present.
 // let provider = new ethers.providers.JsonRpcProvider(atob(ETH_NODE))
 export let web3 = new ethers.providers.InfuraProvider(
-  'homestead',
+  "homestead",
   process.env.INFURA
 )
 
@@ -11,17 +12,17 @@ export const zeroAddress = ethers.constants.AddressZero
 
 export const registerProvider = (wallet) => {
   if (wallet) {
-    console.log('Using Wallet provider')
+    console.log("Using Wallet provider")
     try {
       web3 = new ethers.providers.Web3Provider(wallet)
-      wallet.on('chainChanged', (_chainId) => window.location.reload())
+      wallet.on("chainChanged", (_chainId) => window.location.reload())
     } catch (error) {
       console.log(error)
     }
   } else if (window && window.ethereum) {
-    console.log('Using Window provider')
+    console.log("Using Window provider")
     web3 = new ethers.providers.Web3Provider(window.ethereum)
-    window.ethereum.on('chainChanged', (_chainId) => window.location.reload())
+    window.ethereum.on("chainChanged", (_chainId) => window.location.reload())
   }
 }
 
@@ -34,25 +35,25 @@ export const setApproval = async (contract, spender, amount) => {
         constant: false,
         inputs: [
           {
-            name: '_spender',
-            type: 'address',
+            name: "_spender",
+            type: "address"
           },
           {
-            name: '_value',
-            type: 'uint256',
-          },
+            name: "_value",
+            type: "uint256"
+          }
         ],
-        name: 'approve',
+        name: "approve",
         outputs: [
           {
-            name: '',
-            type: 'bool',
-          },
+            name: "",
+            type: "bool"
+          }
         ],
         payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
+        stateMutability: "nonpayable",
+        type: "function"
+      }
     ],
     signer
   )
@@ -63,6 +64,59 @@ export const setApproval = async (contract, spender, amount) => {
   }
 }
 
+export const setApprovalForAll = async (contract, spender) => {
+  const signer = web3.getSigner()
+  const erc721 = new ethers.Contract(
+    contract,
+    [
+      {
+        constant: false,
+        inputs: [
+          { internalType: "address", name: "to", type: "address" },
+          { internalType: "bool", name: "approved", type: "bool" }
+        ],
+        name: "setApprovalForAll",
+        outputs: [],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function"
+      }
+    ],
+    signer
+  )
+  try {
+    return await erc721.setApprovalForAll(spender, true)
+  } catch (error) {
+    return error
+  }
+}
+
+export const fetchApprovalForAll = async (account, contract, spender) => {
+  const erc721 = new ethers.Contract(
+    contract,
+    [
+      {
+        constant: true,
+        inputs: [
+          { internalType: "address", name: "owner", type: "address" },
+          { internalType: "address", name: "operator", type: "address" }
+        ],
+        name: "isApprovedForAll",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function"
+      }
+    ],
+    web3
+  )
+
+  const bool = await erc721.isApprovedForAll(account, spender, {
+    gasLimit: 100000
+  })
+  return bool
+}
+
 export const fetchBalance = async (contract, account, digits, fixed) => {
   const erc20 = new ethers.Contract(
     contract,
@@ -71,21 +125,21 @@ export const fetchBalance = async (contract, account, digits, fixed) => {
         constant: true,
         inputs: [
           {
-            name: '_owner',
-            type: 'address',
-          },
+            name: "_owner",
+            type: "address"
+          }
         ],
-        name: 'balanceOf',
+        name: "balanceOf",
         outputs: [
           {
-            name: 'balance',
-            type: 'uint256',
-          },
+            name: "balance",
+            type: "uint256"
+          }
         ],
         payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
+        stateMutability: "view",
+        type: "function"
+      }
     ],
     web3
   )
@@ -111,25 +165,25 @@ export const fetchAllowance = async (
         constant: true,
         inputs: [
           {
-            name: '_owner',
-            type: 'address',
+            name: "_owner",
+            type: "address"
           },
           {
-            name: '_spender',
-            type: 'address',
-          },
+            name: "_spender",
+            type: "address"
+          }
         ],
-        name: 'allowance',
+        name: "allowance",
         outputs: [
           {
-            name: '',
-            type: 'uint256',
-          },
+            name: "",
+            type: "uint256"
+          }
         ],
         payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
+        stateMutability: "view",
+        type: "function"
+      }
     ],
     web3
   )

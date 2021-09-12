@@ -102,7 +102,7 @@ const Header = () => {
             <Flex>
               <Link onClick={() => router.push("/")}>
                 <HStack>
-                  <Heading fontSize="xl">ABExchange</Heading>
+                  <Heading fontSize="xl">Block Gallery</Heading>
                 </HStack>
               </Link>
             </Flex>

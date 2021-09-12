@@ -35,7 +35,7 @@ function Heros() {
               alignItems="center"
             >
               <chakra.h1
-                fontSize={{ base: "4xl", sm: "5xl", md: "6xl" }}
+                fontSize={{ base: "4xl", sm: "5xl", md: "5xl" }}
                 letterSpacing="tight"
                 lineHeight="short"
                 fontWeight="extrabold"
@@ -48,7 +48,7 @@ function Heros() {
                   display={{ base: "block", xl: "inline" }}
                   color={useColorModeValue("brand.600", "brand.400")}
                 >
-                  exchange you deserve
+                  explorer you deserve
                 </chakra.span>
               </chakra.h1>
               <chakra.p
@@ -58,14 +58,20 @@ function Heros() {
                 mx={{ sm: "auto", lg: 0 }}
                 color="gray.500"
               >
-                ABEx is a marketplace specifically built for Art Blocks. Its
-                powered by the 0x Protocol to ensure fast & secure execution.
-                Save thousands on fees with ABEx.
+                {`Block Gallery was specifically built to help you nagivate Art
+                Blocks. Its simplified their confusing and often inconsistent
+                API into something a little more friendly. But note: data my be
+                incomplete or dodgy.`}
               </chakra.p>
             </Box>
           </Box>
         </Box>
-        <Block id={143000817} dynamic={true} />
+
+        <Block
+          id={138000002}
+          dynamic={true}
+          // info={{ name: "phase #817", artistName: "Loren Bednar" }}
+        />
       </Flex>
     </Box>
   )
