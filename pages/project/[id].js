@@ -30,48 +30,71 @@ const fetcher = (url) => fetch(url).then((res) => res.json())
 export default function Project({ project }) {
   const router = useRouter()
 
-  const initalTokens = Array(50)
-    .fill("x")
-    .map((_, i) => generateTokenId(project.id, i))
+  const initalTokens = project.ranking
+    ? project.ranking.slice(0, 50)
+    : Array(50)
+        .fill("x")
+        .map((_, i) => generateTokenId(project.id, i))
 
+  const [order, setOrder] = useState("ids")
   const [filter, setFilter] = useState({})
   const [list, setList] = useState(initalTokens)
 
   useEffect(() => {
-    if (project) {
-      let filteredTokens = {}
-      let featureArrays = []
-      //Create array of token ids
-      Object.entries(filter).map((obj) => {
-        if (obj[1] === "") return
-        featureArrays.push(project.traits[obj[0]][obj[1]])
-      })
+    console.log("Rerendering")
+    let filteredTokens = {}
+    let featureArrays = []
+    //Create array of token ids
+    Object.entries(filter).map((obj) => {
+      if (obj[1] === "") return
+      featureArrays.push(project.traits[obj[0]][obj[1]])
+    })
 
-      // Count the occurances of the token id
-      featureArrays.map((tokens, i) => {
-        if (i === 0) {
-          // Push the first set into the array
-          tokens.map((id) => (filteredTokens[id] = 0))
-        } else {
-          // Add to the counter if id exists
-          tokens.map((id) => {
-            if (filteredTokens[id] === 0) {
-              filteredTokens[id]++
-            }
-          })
-        }
-      })
-
-      // filter out tokens whos counter doesn't match the filter length
-      const finalList = Object.entries(filteredTokens)
-        .filter((obj) => {
-          return obj[1] === featureArrays.length - 1
-        })
-        .map((obj) => obj[0])
-
-      setList(featureArrays.length != 0 ? finalList : initalTokens)
+    // Escape to first 50 if
+    if (featureArrays.length === 0) {
+      if (order === "rank") {
+        return setList([...project.ranking.slice(0, 50)])
+      } else {
+        return setList(
+          Array(50)
+            .fill("x")
+            .map((_, i) => generateTokenId(project.id, i))
+        )
+      }
     }
-  }, [filter])
+
+    // Count the occurances of the token id
+    featureArrays.map((tokens, i) => {
+      if (i === 0) {
+        // Push the first set into the array
+        tokens.map((id) => (filteredTokens[id] = 0))
+      } else {
+        // Add to the counter if id exists
+        tokens.map((id) => {
+          if (filteredTokens.hasOwnProperty(id)) {
+            filteredTokens[id]++
+          }
+        })
+      }
+    })
+    console.log(filteredTokens)
+    // filter out tokens whos counter doesn't match the filter length
+    const finalList = Object.entries(filteredTokens)
+      .filter((obj) => {
+        return obj[1] === featureArrays.length - 1
+      })
+      .map((obj) => obj[0])
+
+    if (order === "rank") {
+      return setList(
+        finalList.sort(
+          (a, b) => project.ranking.indexOf(a) - project.ranking.indexOf(b)
+        )
+      )
+    } else {
+      return setList(finalList)
+    }
+  }, [filter, order])
 
   const resetFilter = () => setFilter({})
 
@@ -81,7 +104,7 @@ export default function Project({ project }) {
     modFilter[id] = trait
     setFilter(modFilter)
   }
-
+  console.log(project.aspectRatio)
   return (
     <Page>
       <Head>
@@ -195,6 +218,18 @@ export default function Project({ project }) {
             alignItems="baseline"
             flexWrap="wrap"
           >
+            <Select
+              w="fit-content"
+              size="sm"
+              // placeholder={"ORDER"}
+              mx={0.5}
+              my={1}
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+            >
+              <option value={"id"}>ORDER BY ID</option>
+              <option value={"rank"}>ORDER BY RANK</option>
+            </Select>
             {project.traits &&
               Object.values(project.traits).map((trait, i) => {
                 const traits = Object.entries(trait)
@@ -244,9 +279,13 @@ export default function Project({ project }) {
               <a key={i} onClick={() => router.push(`/token/${id}`)}>
                 <Block
                   id={id}
-                  rank={project.ranking.indexOf(id)}
+                  rank={
+                    project.ranking ? project.ranking.indexOf(id) + 1 : null
+                  }
                   dynamic={false}
                   ratio={project.aspectRatio}
+                  invocations={project.invocations}
+                  info
                 />
               </a>
             ))}

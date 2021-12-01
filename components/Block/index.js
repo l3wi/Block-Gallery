@@ -1,18 +1,27 @@
-import React, { useEffect, useState } from "react"
-import { Box, chakra, Image, Flex } from "@chakra-ui/react"
-import { useColorMode, useColorModeValue } from "@chakra-ui/color-mode"
+import React, { useCallback, useState } from "react"
+import { Box, chakra, Flex } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-
-const Block = ({ id, dynamic, rank, info = {}, ratio = 1 }) => {
+import Image from "next/image"
+const Block = ({ id, dynamic, rank, invocations, info = {}, ratio = 1 }) => {
   const router = useRouter()
   const aspect = parseFloat(ratio)
+
+  const [height, setHeight] = useState(null)
+  const [width, setWidth] = useState(null)
+  const div = useCallback((node) => {
+    if (node !== null) {
+      setHeight(node.getBoundingClientRect().height)
+      setWidth(node.getBoundingClientRect().width)
+    }
+  }, [])
+
   return (
-    <>
+    <Box w="100%" h="fit-content" ref={div}>
       {dynamic ? (
         <Flex w="100%" flexDirection="column" alignItems="center">
           <Flex
-            w="400px"
-            minH={400 / aspect}
+            w={width ? width : "400px"}
+            minH={width ? width / aspect : 400 / aspect}
             h="fit-content"
             flexDirection="column"
           >
@@ -24,26 +33,34 @@ const Block = ({ id, dynamic, rank, info = {}, ratio = 1 }) => {
               width="100%"
               height="100%"
               style={{
-                minHeight: 400 / aspect,
-                minWidth: 400,
+                minHeight: width ? width / aspect : 400 / aspect,
+                minWidth: width ? width : "400px",
                 overflow: "hidden"
               }}
               frameBorder="0"
             ></iframe>
-            {rank}
           </Flex>
         </Flex>
       ) : (
-        <Image
-          w="100%"
-          height="100%"
-          minH={300 / aspect}
-          minW="300px"
-          fit="cover"
-          src={`https://api.artblocks.io/image/${id}`}
-        />
+        <Flex flexDirection="column">
+          <Image
+            height={Math.floor(280 / aspect) + "px"}
+            width={"280px"}
+            alt={"ArtBlock # " + id}
+            fit="cover"
+            src={`https://d2ekshiy7r5vl7.cloudfront.net/${id}.png`}
+          />
+
+          {info && (
+            <Flex justifyContent="space-between">
+              <Box>{`ID: #${id}`}</Box>
+
+              {rank && <Box>{`Rarity: #${rank}`}</Box>}
+            </Flex>
+          )}
+        </Flex>
       )}
-    </>
+    </Box>
   )
 }
 export default Block

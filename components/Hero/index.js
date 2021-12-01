@@ -58,10 +58,9 @@ function Heros() {
                 mx={{ sm: "auto", lg: 0 }}
                 color="gray.500"
               >
-                {`Block Gallery was specifically built to help you nagivate Art
-                Blocks. Its simplified their confusing and often inconsistent
-                API into something a little more friendly. But note: data my be
-                incomplete or dodgy.`}
+                {`Block Gallery was built to help you nagivate Art
+                Blocks. It brings ranking, filtering and ordering to their often inconsistent
+                API. Please note: normalized might be a little quirky.`}
               </chakra.p>
             </Box>
           </Box>
@@ -70,6 +69,7 @@ function Heros() {
         <Block
           id={138000002}
           dynamic={true}
+          ratio={1.77777}
           // info={{ name: "phase #817", artistName: "Loren Bednar" }}
         />
       </Flex>

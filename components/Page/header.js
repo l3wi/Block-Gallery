@@ -66,26 +66,27 @@ const Header = () => {
       spacing={3}
       rounded="sm"
       shadow="sm"
+      zIndex={10}
     >
       <CloseButton
         aria-label="Close menu"
         justifySelf="self-start"
         onClick={mobileNav.onClose}
       />
-      <Button w="full" variant="ghost" leftIcon={<FiHome />}>
-        Dashboard
-      </Button>
-      <Button
-        w="full"
-        variant="solid"
-        colorScheme="brand"
-        leftIcon={<FiInbox />}
+      <IconButton
+        size="md"
+        fontSize="lg"
+        aria-label={`Switch to ${text} mode`}
+        variant="ghost"
+        color="current"
+        ml={{ base: "0", md: "3" }}
+        mr={2}
+        onClick={toggleMode}
+        icon={<SwitchIcon />}
       >
-        Inbox
-      </Button>
-      <Button w="full" variant="ghost" leftIcon={<FiCamera />}>
-        Videos
-      </Button>
+        Toggle Theme
+      </IconButton>
+      <UserAddress />
     </VStack>
   )
   return (
@@ -114,18 +115,20 @@ const Header = () => {
               align="center"
               color="gray.400"
             >
-              <IconButton
-                size="md"
-                fontSize="lg"
-                aria-label={`Switch to ${text} mode`}
-                variant="ghost"
-                color="current"
-                ml={{ base: "0", md: "3" }}
-                mr={2}
-                onClick={toggleMode}
-                icon={<SwitchIcon />}
-              />
-              <UserAddress />
+              <Flex display={{ base: "none", md: "flex" }}>
+                <IconButton
+                  size="md"
+                  fontSize="lg"
+                  aria-label={`Switch to ${text} mode`}
+                  variant="ghost"
+                  color="current"
+                  ml={{ base: "0", md: "3" }}
+                  mr={2}
+                  onClick={toggleMode}
+                  icon={<SwitchIcon />}
+                />
+                <UserAddress />
+              </Flex>
               <IconButton
                 display={{ base: "flex", md: "none" }}
                 aria-label="Open menu"

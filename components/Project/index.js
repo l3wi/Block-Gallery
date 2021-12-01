@@ -1,11 +1,15 @@
 import { Box, Flex, Skeleton, Tag, TagLabel } from "@chakra-ui/react"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 import PillPity from "pill-pity"
+import Image from "next/image"
 
 import { generateTokenId, projectInfo } from "../../utils/rarity"
 
 const Project = ({ id, name, artistName, invocations, curation }) => {
-  const image = `https://api.artblocks.io/image/${generateTokenId(id, 1)}`
+  const image = `https://d2ekshiy7r5vl7.cloudfront.net/${generateTokenId(
+    id,
+    1
+  )}.png`
 
   return (
     <Flex
